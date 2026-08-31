@@ -7,7 +7,7 @@ import {
   type APIInteractionResponse,
 } from "discord-api-types/v10";
 import { isAuthorized } from "@/lib/auth";
-import { formatDate, getStats, getStreak, recordIncident } from "@/lib/counter/service";
+import { formatDate, getLastIncident, getStats, getStreak, recordIncident } from "@/lib/counter/service";
 import { logger } from "@/lib/logging";
 
 function message(content: string, ephemeral = false): APIInteractionResponse {
@@ -49,17 +49,25 @@ export async function handleApplicationCommand(
     }
 
     case "days": {
-      const streak = await getStreak();
+      const [streak, lastIncident] = await Promise.all([
+        getStreak(),
+        getLastIncident(),
+      ]);
 
       if (!streak.lastIncidentAt) {
         return message("No incidents recorded yet.", true);
       }
 
-      const last = formatDate(streak.lastIncidentAt);
-      return message(
-        `Current streak: ${streak.days} days\nLast incident: ${last}`,
-        true,
-      );
+      const lines = [
+        `Current streak: ${streak.days} days`,
+        `Last incident: ${formatDate(streak.lastIncidentAt)}`,
+      ];
+
+      if (lastIncident?.reason) {
+        lines.push(`Reason: ${lastIncident.reason}`);
+      }
+
+      return message(lines.join("\n"), true);
     }
 
     case "stats": {
@@ -71,6 +79,7 @@ export async function handleApplicationCommand(
         `**Total incidents:** ${stats.totalIncidents}`,
         `**Most recent incident:** ${recent ? formatDate(recent.createdAt) : "—"}`,
         `**Last reset author:** ${recent ? recent.username : "—"}`,
+        `**Reason:** ${recent?.reason ?? "—"}`,
       ];
 
       return message(lines.join("\n"), true);

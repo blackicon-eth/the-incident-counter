@@ -71,6 +71,18 @@ export async function recordIncident(input: RecordIncidentInput): Promise<void> 
   });
 }
 
+export async function getLastIncident(): Promise<Incident | null> {
+  const db = getDb();
+  const recent = await db
+    .select()
+    .from(incidents)
+    .orderBy(desc(incidents.createdAt))
+    .limit(1)
+    .get();
+
+  return recent ?? null;
+}
+
 export interface Stats {
   streak: Streak;
   totalIncidents: number;
@@ -83,7 +95,7 @@ export async function getStats(): Promise<Stats> {
   const [streak, totalRow, recent] = await Promise.all([
     getStreak(),
     db.select({ total: count() }).from(incidents).get(),
-    db.select().from(incidents).orderBy(desc(incidents.createdAt)).limit(1).get(),
+    getLastIncident(),
   ]);
 
   return {
