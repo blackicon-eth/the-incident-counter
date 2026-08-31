@@ -34,7 +34,6 @@ export async function GET(request: Request): Promise<Response> {
     const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
 
     await sendChannelMessage(env.DISCORD_CHANNEL_ID, {
-      embeds: [{ image: { url: "attachment://counter.png" } }],
       files: [
         {
           name: "counter.png",
