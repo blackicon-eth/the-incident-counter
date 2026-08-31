@@ -34,7 +34,6 @@ export async function GET(request: Request): Promise<Response> {
     const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
 
     await sendChannelMessage(env.DISCORD_CHANNEL_ID, {
-      content: `🟢 ${days} days without Discord incidents`,
       embeds: [{ image: { url: "attachment://counter.png" } }],
       files: [
         {
