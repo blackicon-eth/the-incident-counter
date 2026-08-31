@@ -44,7 +44,7 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
         alignItems: "center",
         justifyContent: "center",
         background: colors.background,
-        padding: "40px",
+        padding: "32px",
       }}
     >
       <div
@@ -53,6 +53,7 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          width: "100%",
           background: colors.surfaceContainerLow,
           border: `1px solid ${colors.surfaceContainerHigh}`,
           borderRadius: "36px",

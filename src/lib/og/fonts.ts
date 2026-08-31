@@ -8,12 +8,12 @@ interface LoadedFont {
 }
 
 const FONTS_CSS_URL =
-  "https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap";
+  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500&display=swap";
 
-// Google Fonts serves WOFF (not WOFF2) to user agents without WOFF2 support,
-// which is what satori (next/og) can render.
+// Google Fonts serves TTF to user agents without WOFF/WOFF2 support. satori
+// (next/og) only parses TTF/OTF, so we request with a legacy Android UA.
 const LEGACY_UA =
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36";
+  "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
 export async function loadFonts(): Promise<LoadedFont[]> {
   try {
