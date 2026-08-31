@@ -64,7 +64,12 @@ export async function handleApplicationCommand(
         logger.error("Failed to post incident recap message", error);
       }
 
-      return message("⚠️ Incident recorded. Counter has been reset to 0.", true);
+      // Acknowledge the interaction without a visible message — the public
+      // recap above is the announcement.
+      return {
+        type: InteractionResponseType.ChannelMessageWithSource,
+        data: { flags: MessageFlags.Ephemeral },
+      };
     }
 
     case "days": {
