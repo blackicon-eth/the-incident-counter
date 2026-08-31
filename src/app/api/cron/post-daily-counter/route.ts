@@ -25,9 +25,24 @@ export async function GET(request: Request): Promise<Response> {
     imageUrl.searchParams.set("days", String(days));
     imageUrl.searchParams.set("lastIncidentDate", lastIncidentDate);
 
+    const imageResponse = await fetch(imageUrl.toString());
+    if (!imageResponse.ok) {
+      throw new Error(
+        `Failed to generate counter image: HTTP ${imageResponse.status}`,
+      );
+    }
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+
     await sendChannelMessage(env.DISCORD_CHANNEL_ID, {
       content: `🟢 ${days} days without Discord incidents`,
-      embeds: [{ image: { url: imageUrl.toString() } }],
+      embeds: [{ image: { url: "attachment://counter.png" } }],
+      files: [
+        {
+          name: "counter.png",
+          contentType: "image/png",
+          data: imageBuffer,
+        },
+      ],
     });
 
     logger.info("Daily counter posted to Discord", { days });
