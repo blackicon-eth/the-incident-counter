@@ -1,7 +1,20 @@
 import { ImageResponse } from "next/og";
+import { loadFonts } from "@/lib/og/fonts";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
+
+// Material 3 dark palette ("Obsidian Signal") seeded from #81c784.
+const colors = {
+  background: "#131313",
+  surface: "#201f1f",
+  border: "#40493f",
+  onSurface: "#e5e2e1",
+  onSurfaceVariant: "#c0c9bc",
+  primary: "#9ce39e",
+  primaryContainer: "#81c784",
+  tertiary: "#7de3d8",
+};
 
 interface OgProps {
   days: string;
@@ -15,25 +28,22 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
-        background: "linear-gradient(160deg, #141926 0%, #0a0d14 100%)",
+        justifyContent: "center",
+        background: colors.background,
         padding: "48px",
+        fontFamily: "Hanken Grotesk",
       }}
     >
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
           width: "100%",
           height: "100%",
-          borderRadius: "28px",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
+          background: colors.surface,
+          border: `1px solid ${colors.border}`,
+          borderRadius: "24px",
           padding: "48px",
         }}
       >
@@ -41,79 +51,91 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "12px",
-            marginBottom: "32px",
+            justifyContent: "center",
+            gap: "10px",
           }}
         >
           <div
             style={{
-              width: "16px",
-              height: "16px",
+              width: "10px",
+              height: "10px",
               borderRadius: "999px",
-              background: "#57F287",
-              boxShadow: "0 0 16px rgba(87, 242, 135, 0.8)",
+              background: colors.primaryContainer,
             }}
           />
-          <span
+          <div
             style={{
-              fontSize: "28px",
-              color: "#9BA3B0",
-              fontWeight: 600,
-              letterSpacing: "5px",
-              textTransform: "uppercase",
+              fontFamily: "JetBrains Mono",
+              fontSize: "22px",
+              fontWeight: 500,
+              color: colors.onSurfaceVariant,
+              letterSpacing: "0.2em",
             }}
           >
-            Incident Status
-          </span>
-        </div>
-
-        <div
-          style={{
-            fontSize: "42px",
-            color: "#E6E8EE",
-            fontWeight: 600,
-            marginBottom: "40px",
-            textAlign: "center",
-          }}
-        >
-          Days Without Discord Incidents
+            INCIDENT STATUS
+          </div>
         </div>
 
         <div
           style={{
             display: "flex",
-            alignItems: "baseline",
-            gap: "18px",
-            marginBottom: "40px",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+            gap: "8px",
           }}
         >
-          <span
+          <div
             style={{
-              fontSize: "230px",
-              lineHeight: 1,
-              color: "#57F287",
-              fontWeight: 800,
-              letterSpacing: "-6px",
-            }}
-          >
-            {days}
-          </span>
-          <span
-            style={{
-              fontSize: "52px",
-              color: "#9BA3B0",
+              fontSize: "40px",
               fontWeight: 600,
+              color: colors.onSurface,
+              textAlign: "center",
             }}
           >
-            days
-          </span>
+            Days Without Discord Incidents
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: "18px",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "200px",
+                lineHeight: 1,
+                fontWeight: 700,
+                color: colors.primary,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {days}
+            </span>
+            <span
+              style={{
+                fontSize: "52px",
+                fontWeight: 600,
+                color: colors.onSurfaceVariant,
+              }}
+            >
+              days
+            </span>
+          </div>
         </div>
 
         <div
           style={{
-            fontSize: "28px",
-            color: "#6B7280",
+            display: "flex",
+            justifyContent: "center",
+            fontFamily: "JetBrains Mono",
+            fontSize: "24px",
             fontWeight: 500,
+            color: colors.onSurfaceVariant,
+            opacity: 0.75,
           }}
         >
           {lastIncidentDate
@@ -132,12 +154,14 @@ export async function GET(request: Request): Promise<ImageResponse> {
   const lastIncidentDate = searchParams.get("lastIncidentDate") ?? undefined;
 
   const days = /^\d+$/.test(daysParam) ? daysParam : "0";
+  const fonts = await loadFonts();
 
   return new ImageResponse(
     <OgCard days={days} lastIncidentDate={lastIncidentDate} />,
     {
       width: 1200,
       height: 630,
+      fonts,
     },
   );
 }
