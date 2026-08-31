@@ -8,7 +8,9 @@ import {
 } from "discord-api-types/v10";
 import { isAuthorized } from "@/lib/auth";
 import { formatDate, getLastIncident, getStats, getStreak, recordIncident } from "@/lib/counter/service";
+import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logging";
+import { sendChannelMessage } from "./send";
 
 function message(content: string, ephemeral = false): APIInteractionResponse {
   return {
@@ -44,6 +46,23 @@ export async function handleApplicationCommand(
 
       await recordIncident({ userId, username, reason });
       logger.info("Incident recorded, counter reset", { userId, username, reason });
+
+      const channelId = interaction.channel_id ?? getEnv().DISCORD_CHANNEL_ID;
+      const timestamp = Math.floor(Date.now() / 1000);
+
+      try {
+        await sendChannelMessage(channelId, {
+          content: [
+            "⚠️ **Incident recorded — counter reset to 0**",
+            "",
+            `**Reported by:** <@${userId}> (\`${username}\`)`,
+            `**Reason:** ${reason ?? "_No reason provided_"}`,
+            `**When:** <t:${timestamp}:F>`,
+          ].join("\n"),
+        });
+      } catch (error) {
+        logger.error("Failed to post incident recap message", error);
+      }
 
       return message("⚠️ Incident recorded. Counter has been reset to 0.", true);
     }
