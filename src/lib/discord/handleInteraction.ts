@@ -47,7 +47,7 @@ export async function handleApplicationCommand(
       await recordIncident({ userId, username, reason });
       logger.info("Incident recorded, counter reset", { userId, username, reason });
 
-      const channelId = interaction.channel_id ?? getEnv().DISCORD_CHANNEL_ID;
+      const channelId = getEnv().DISCORD_CHANNEL_ID;
       const timestamp = Math.floor(Date.now() / 1000);
 
       try {
