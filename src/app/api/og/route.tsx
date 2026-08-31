@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 import { loadFonts } from "@/lib/og/fonts";
 
@@ -10,7 +9,6 @@ const colors = {
   background: "#131313",
   surfaceContainerLow: "#1c1b1b",
   surfaceContainerHigh: "#2a2a2a",
-  onSurface: "#e5e2e1",
   onSurfaceVariant: "#c0c9bc",
   primary: "#9ce39e",
 };
@@ -31,19 +29,12 @@ function formatHumanDate(iso?: string): string | undefined {
   });
 }
 
-const BOLT_PATH =
-  "M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z";
-
 interface OgProps {
   days: string;
   lastIncidentDate?: string;
 }
 
 function OgCard({ days, lastIncidentDate }: OgProps) {
-  const boltSrc = `data:image/svg+xml;utf8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="${colors.primary}" d="${BOLT_PATH}"/></svg>`,
-  )}`;
-
   return (
     <div
       style={{
@@ -53,7 +44,7 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
         alignItems: "center",
         justifyContent: "center",
         background: colors.background,
-        padding: "64px",
+        padding: "40px",
       }}
     >
       <div
@@ -64,14 +55,14 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
           justifyContent: "center",
           background: colors.surfaceContainerLow,
           border: `1px solid ${colors.surfaceContainerHigh}`,
-          borderRadius: "32px",
-          padding: "56px 72px",
+          borderRadius: "36px",
+          padding: "72px 96px",
         }}
       >
         <div
           style={{
             fontFamily: "JetBrains Mono",
-            fontSize: "34px",
+            fontSize: "40px",
             fontWeight: 500,
             color: colors.onSurfaceVariant,
             letterSpacing: "0.05em",
@@ -81,40 +72,25 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
           Days Without Discord Incidents
         </div>
 
-        <div
+        <span
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "24px",
-            marginTop: "48px",
-            marginBottom: "48px",
+            fontSize: "210px",
+            lineHeight: 1,
+            fontWeight: 700,
+            color: colors.primary,
+            letterSpacing: "-0.02em",
+            fontFamily: "Hanken Grotesk",
+            marginTop: "64px",
+            marginBottom: "64px",
           }}
         >
-          <img
-            src={boltSrc}
-            width={160}
-            height={160}
-            alt=""
-            style={{ display: "flex" }}
-          />
-          <span
-            style={{
-              fontSize: "150px",
-              lineHeight: 1,
-              fontWeight: 700,
-              color: colors.primary,
-              letterSpacing: "-0.02em",
-              fontFamily: "Hanken Grotesk",
-            }}
-          >
-            {days}
-          </span>
-        </div>
+          {days}
+        </span>
 
         <div
           style={{
             fontFamily: "Hanken Grotesk",
-            fontSize: "32px",
+            fontSize: "36px",
             fontWeight: 400,
             color: colors.onSurfaceVariant,
             opacity: 0.8,
