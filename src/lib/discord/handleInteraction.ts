@@ -64,12 +64,7 @@ export async function handleApplicationCommand(
         logger.error("Failed to post incident recap message", error);
       }
 
-      // Acknowledge the interaction without a visible message — the public
-      // recap above is the announcement.
-      return {
-        type: InteractionResponseType.ChannelMessageWithSource,
-        data: { flags: MessageFlags.Ephemeral },
-      };
+      return message("Incident registered", true);
     }
 
     case "days": {
