@@ -33,11 +33,11 @@ export default async function Home() {
     <main className="dashboard-shell">
       <div className="ambient-glow" aria-hidden="true" />
       <section className="intro reveal">
-        <p className="eyebrow">DISCORD / SAFETY SIGNAL</p>
-        <div className="headline-row">
-          <h1>Clear skies,<br /><em>so far.</em></h1>
+        <div className="eyebrow-row">
+          <p className="eyebrow">DISCORD / SAFETY SIGNAL</p>
           <div className="status-pill"><span /> LIVE MONITORING</div>
         </div>
+        <h1>Clear skies,<br /><em>so far.</em></h1>
         <p className="intro-copy">A live record of the server&apos;s calm. Every incident resets the clock. Every quiet day is earned.</p>
       </section>
 
