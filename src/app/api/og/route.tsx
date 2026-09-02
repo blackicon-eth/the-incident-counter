@@ -45,6 +45,15 @@ function daysToColor(days: number): string {
   return hslToHex(h, s, l);
 }
 
+function formatReason(reason?: string): string | undefined {
+  if (!reason) {
+    return undefined;
+  }
+
+  const normalized = reason.replace(/\s+/g, " ").trim();
+  return normalized.length > 90 ? `${normalized.slice(0, 87)}...` : normalized;
+}
+
 function formatHumanDate(iso?: string): string | undefined {
   if (!iso) {
     return undefined;
@@ -70,6 +79,7 @@ interface OgProps {
 function OgCard({ days, lastIncidentDate, reason }: OgProps) {
   const daysNum = Number.parseInt(days, 10) || 0;
   const numberColor = daysToColor(daysNum);
+  const displayReason = formatReason(reason);
 
   return (
     <div
@@ -137,9 +147,10 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
             ? `Last incident: ${formatHumanDate(lastIncidentDate)}`
             : "No incidents recorded yet"}
         </div>
-        {reason && (
+        {displayReason && (
           <div
             style={{
+              width: "100%",
               maxWidth: "900px",
               marginTop: "18px",
               color: colors.onSurfaceVariant,
@@ -148,9 +159,10 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
               fontWeight: 400,
               opacity: 0.65,
               textAlign: "center",
+              whiteSpace: "nowrap",
             }}
           >
-            {`Reason: ${reason}`}
+            {`"${displayReason}"`}
           </div>
         )}
       </div>
