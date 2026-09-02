@@ -115,7 +115,7 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
             fontWeight: 700,
             color: numberColor,
             letterSpacing: "-0.02em",
-            fontFamily: "Space Grotesk",
+            fontFamily: "Hanken Grotesk",
             marginTop: "64px",
             marginBottom: "64px",
           }}
@@ -125,7 +125,7 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
 
         <div
           style={{
-            fontFamily: "Space Grotesk",
+            fontFamily: "Hanken Grotesk",
             fontSize: "36px",
             fontWeight: 400,
             color: colors.onSurfaceVariant,
