@@ -1,4 +1,4 @@
-import { formatDate, getStreak } from "@/lib/counter/service";
+import { formatDate, getLastIncident, getStreak } from "@/lib/counter/service";
 import { sendChannelMessage } from "@/lib/discord/send";
 import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logging";
@@ -15,7 +15,10 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   try {
-    const streak = await getStreak();
+    const [streak, lastIncident] = await Promise.all([
+      getStreak(),
+      getLastIncident(),
+    ]);
     const days = streak.days;
     const lastIncidentDate = streak.lastIncidentAt
       ? formatDate(streak.lastIncidentAt)
@@ -24,6 +27,9 @@ export async function GET(request: Request): Promise<Response> {
     const imageUrl = new URL("/api/og", env.APP_URL);
     imageUrl.searchParams.set("days", String(days));
     imageUrl.searchParams.set("lastIncidentDate", lastIncidentDate);
+    if (lastIncident?.reason) {
+      imageUrl.searchParams.set("reason", lastIncident.reason);
+    }
 
     const imageResponse = await fetch(imageUrl.toString());
     if (!imageResponse.ok) {

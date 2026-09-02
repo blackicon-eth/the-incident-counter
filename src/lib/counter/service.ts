@@ -3,6 +3,7 @@ import { getDb } from "@/db/client";
 import { counterState, incidents, type Incident } from "@/db/schema";
 
 const DAY_MS = 86_400_000;
+const DISPLAY_TIME_ZONE = "Europe/Rome";
 
 function startOfUtcDay(date: Date): number {
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
@@ -17,7 +18,14 @@ export function daysWithoutIncidents(from: Date, to: Date): number {
 }
 
 export function formatDate(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: DISPLAY_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 export interface Streak {

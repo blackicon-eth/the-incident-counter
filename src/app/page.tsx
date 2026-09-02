@@ -6,11 +6,13 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
   year: "numeric",
+  timeZone: "Europe/Rome",
 });
 
 const timeFormatter = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
   minute: "2-digit",
+  timeZone: "Europe/Rome",
 });
 
 const MILESTONES = [7, 14, 30, 100, 365, 1000, 3000, 5000, 10000];
@@ -75,7 +77,7 @@ export default async function Home() {
               ))}
             </div>
           </div>
-          <div className="track-meta"><span>0 days</span><span>10,000 day horizon</span></div>
+          <div className="track-meta"><span>0 days</span></div>
         </article>
 
         <div className="metric-stack">

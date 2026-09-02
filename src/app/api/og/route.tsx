@@ -64,9 +64,10 @@ function formatHumanDate(iso?: string): string | undefined {
 interface OgProps {
   days: string;
   lastIncidentDate?: string;
+  reason?: string;
 }
 
-function OgCard({ days, lastIncidentDate }: OgProps) {
+function OgCard({ days, lastIncidentDate, reason }: OgProps) {
   const daysNum = Number.parseInt(days, 10) || 0;
   const numberColor = daysToColor(daysNum);
 
@@ -136,6 +137,22 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
             ? `Last incident: ${formatHumanDate(lastIncidentDate)}`
             : "No incidents recorded yet"}
         </div>
+        {reason && (
+          <div
+            style={{
+              maxWidth: "900px",
+              marginTop: "18px",
+              color: colors.onSurfaceVariant,
+              fontFamily: "Noto Sans",
+              fontSize: "28px",
+              fontWeight: 400,
+              opacity: 0.65,
+              textAlign: "center",
+            }}
+          >
+            Reason: {reason}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -146,12 +163,13 @@ export async function GET(request: Request): Promise<ImageResponse> {
 
   const daysParam = searchParams.get("days") ?? "0";
   const lastIncidentDate = searchParams.get("lastIncidentDate") ?? undefined;
+  const reason = searchParams.get("reason") ?? undefined;
 
   const days = /^\d+$/.test(daysParam) ? daysParam : "0";
   const fonts = await loadFonts();
 
   return new ImageResponse(
-    <OgCard days={days} lastIncidentDate={lastIncidentDate} />,
+    <OgCard days={days} lastIncidentDate={lastIncidentDate} reason={reason} />,
     {
       width: 1200,
       height: 630,
