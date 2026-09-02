@@ -56,12 +56,12 @@ export default async function Home() {
           <article className="metric-card panel">
             <span className="metric-icon">↯</span>
             <div><p className="metric-label">TOTAL INCIDENTS</p><strong>{totalIncidents}</strong></div>
-            <span className="metric-arrow">↗</span>
+            <span className="metric-symbol">▦</span>
           </article>
           <article className="metric-card panel">
             <span className="metric-icon">◷</span>
             <div><p className="metric-label">LAST RESET</p><strong>{mostRecentIncident ? formatDate(mostRecentIncident.createdAt) : "No incidents yet"}</strong></div>
-            <span className="metric-arrow">→</span>
+            <span className="metric-symbol">◷</span>
           </article>
         </div>
       </section>

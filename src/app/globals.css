@@ -30,7 +30,7 @@ a { color: inherit; text-decoration: none; }
 .metric-card { display: flex; align-items: center; gap: 17px; min-height: 166px; padding: 27px; border-radius: 7px; }
 .metric-icon { display: grid; flex: 0 0 auto; place-items: center; width: 42px; height: 42px; border: 1px solid #39463d; border-radius: 50%; color: #9ce39e; font-size: 22px; }
 .metric-card strong { display: block; margin-top: 10px; color: #e7ebe5; font: 600 clamp(20px, 2.5vw, 28px) 'Space Grotesk', sans-serif; letter-spacing: -.04em; }
-.metric-arrow { align-self: flex-start; margin-left: auto; color: #68776c; font-size: 18px; }
+.metric-symbol { align-self: flex-start; margin-left: auto; color: #68776c; font-size: 18px; }
 .content-grid { margin-top: 73px; }
 .section-heading { margin-bottom: 19px; }
 .section-heading h2 { margin: 9px 0 0; font: 600 29px 'Space Grotesk', sans-serif; letter-spacing: -.05em; }
@@ -52,5 +52,5 @@ a { color: inherit; text-decoration: none; }
 .reveal { animation: rise .7s both; }
 .delay-one { animation-delay: .1s; }.delay-two { animation-delay: .2s; }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 700px) { .dashboard-shell { padding: 24px 18px; } .eyebrow-row { gap: 16px; } .status-pill { font-size: 9px; } .hero-grid { grid-template-columns: 1fr; } .streak-panel { min-height: 300px; } .streak-track { margin-top: 50px; } .metric-stack { grid-template-columns: 1fr 1fr; } .metric-card { min-height: 145px; padding: 19px; flex-direction: column; align-items: flex-start; gap: 12px; } .metric-card strong { font-size: 18px; } .metric-arrow { position: absolute; margin: 0 0 0 120px; } .incident-row { grid-template-columns: 29px 1fr; padding: 20px 17px; } .incident-id { display: none; } .incident-meta { display: block; line-height: 1.8; } .separator { margin: 0 4px; } .footer { display: block; line-height: 2; } }
+@media (max-width: 700px) { .dashboard-shell { padding: 24px 18px; } .eyebrow-row { gap: 16px; } .status-pill { font-size: 9px; } .hero-grid { grid-template-columns: 1fr; } .streak-panel { min-height: 300px; } .streak-track { margin-top: 50px; } .metric-stack { grid-template-columns: 1fr 1fr; } .metric-card { min-height: 145px; padding: 19px; flex-direction: column; align-items: flex-start; gap: 12px; } .metric-card strong { font-size: 18px; } .metric-symbol { position: absolute; margin: 0 0 0 120px; } .incident-row { grid-template-columns: 29px 1fr; padding: 20px 17px; } .incident-id { display: none; } .incident-meta { display: block; line-height: 1.8; } .separator { margin: 0 4px; } .footer { display: block; line-height: 2; } }
 @media (prefers-reduced-motion: reduce) { .reveal { animation: none; } }
