@@ -51,7 +51,7 @@ function formatReason(reason?: string): string | undefined {
   }
 
   const normalized = reason.replace(/\s+/g, " ").trim();
-  return normalized.length > 90 ? `${normalized.slice(0, 87)}...` : normalized;
+  return normalized.length > 60 ? `${normalized.slice(0, 57)}...` : normalized;
 }
 
 function formatHumanDate(iso?: string): string | undefined {
@@ -80,6 +80,7 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
   const daysNum = Number.parseInt(days, 10) || 0;
   const numberColor = daysToColor(daysNum);
   const displayReason = formatReason(reason);
+  const hasReason = Boolean(displayReason);
 
   return (
     <div
@@ -90,7 +91,7 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
         alignItems: "center",
         justifyContent: "center",
         background: colors.background,
-        padding: "32px",
+        padding: "34px",
       }}
     >
       <div
@@ -103,7 +104,7 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
           background: colors.surfaceContainerLow,
           border: `1px solid ${colors.surfaceContainerHigh}`,
           borderRadius: "36px",
-          padding: "72px 96px",
+          padding: hasReason ? "57px 96px" : "72px 96px",
         }}
       >
         <div
@@ -127,8 +128,8 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
             color: numberColor,
             letterSpacing: "-0.02em",
             fontFamily: "Noto Sans",
-            marginTop: "64px",
-            marginBottom: "64px",
+            marginTop: hasReason ? "52px" : "64px",
+            marginBottom: hasReason ? "52px" : "64px",
           }}
         >
           {days}
@@ -152,10 +153,13 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
             style={{
               width: "100%",
               maxWidth: "900px",
-              marginTop: "18px",
+              alignSelf: "center",
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "16px",
               color: colors.onSurfaceVariant,
               fontFamily: "Noto Sans",
-              fontSize: "28px",
+              fontSize: "24px",
               fontWeight: 400,
               opacity: 0.65,
               textAlign: "center",
