@@ -1,39 +1,91 @@
-export default function Home() {
+import Link from "next/link";
+import { getIncidentHistory, getStats } from "@/lib/counter/service";
+
+export const dynamic = "force-dynamic";
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
+const timeFormatter = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+});
+
+function formatDate(date: Date) {
+  return `${dateFormatter.format(date)} · ${timeFormatter.format(date)}`;
+}
+
+function streakColor(days: number) {
+  const hue = Math.min(122, (days / 100) * 122);
+  return `hsl(${hue} 72% 68%)`;
+}
+
+export default async function Home() {
+  const [{ streak, totalIncidents, mostRecentIncident }, history] =
+    await Promise.all([getStats(), getIncidentHistory()]);
+  const days = streak.days;
+  const progress = Math.min(100, days);
+  const accent = streakColor(days);
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "16px",
-        padding: "32px",
-        textAlign: "center",
-      }}
-    >
-      <div
-        style={{
-          width: "14px",
-          height: "14px",
-          borderRadius: "999px",
-          background: "#57F287",
-          boxShadow: "0 0 18px rgba(87, 242, 135, 0.8)",
-        }}
-      />
-      <h1 style={{ fontSize: "2rem", margin: 0, fontWeight: 700 }}>
-        Days Without Discord Incidents
-      </h1>
-      <p style={{ color: "#9ba3b0", maxWidth: "480px", lineHeight: 1.6 }}>
-        A Discord bot and web service that tracks how long a server has gone
-        without an incident. Add the bot to your server and use the{" "}
-        <code>/days</code>, <code>/stats</code>, and <code>/incident</code>{" "}
-        slash commands.
-      </p>
-      <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
-        Dynamic counter image:{" "}
-        <a href="/api/og?days=42&lastIncidentDate=2026-08-01">/api/og</a>
-      </p>
+    <main className="dashboard-shell">
+      <div className="ambient-glow" aria-hidden="true" />
+      <header className="topbar">
+        <Link className="brand" href="/">
+          <span className="brand-mark" aria-hidden="true"><span /></span>
+          <span>Incident Counter</span>
+        </Link>
+        <div className="status-pill"><span /> LIVE MONITORING</div>
+      </header>
+
+      <section className="intro reveal">
+        <p className="eyebrow">DISCORD / SAFETY SIGNAL</p>
+        <h1>Clear skies,<br /><em>so far.</em></h1>
+        <p className="intro-copy">A live record of the server&apos;s calm. Every incident resets the clock. Every quiet day is earned.</p>
+      </section>
+
+      <section className="hero-grid reveal delay-one">
+        <article className="streak-panel panel">
+          <div className="panel-label"><span className="pulse-dot" /> CURRENT STREAK</div>
+          <div className="streak-number" style={{ color: accent }}>{days}</div>
+          <div className="streak-unit">DAYS WITHOUT INCIDENTS</div>
+          <div className="streak-track" aria-label={`${progress} days toward 100 day milestone`}>
+            <span style={{ width: `${Math.max(progress, 2)}%`, background: accent }} />
+          </div>
+          <div className="track-meta"><span>0</span><span>100 day milestone</span></div>
+        </article>
+
+        <div className="metric-stack">
+          <article className="metric-card panel">
+            <span className="metric-icon">↯</span>
+            <div><p className="metric-label">TOTAL INCIDENTS</p><strong>{totalIncidents}</strong></div>
+            <span className="metric-arrow">↗</span>
+          </article>
+          <article className="metric-card panel">
+            <span className="metric-icon">◷</span>
+            <div><p className="metric-label">LAST RESET</p><strong>{mostRecentIncident ? formatDate(mostRecentIncident.createdAt) : "No incidents yet"}</strong></div>
+            <span className="metric-arrow">→</span>
+          </article>
+        </div>
+      </section>
+
+      <section className="content-grid reveal delay-two">
+        <div className="section-heading"><div><p className="eyebrow">AUDIT TRAIL</p><h2>Incident history</h2></div><span className="count-badge">{history.length} RECORDS</span></div>
+        <div className="history-panel panel">
+          {history.length === 0 ? <div className="empty-state">No incidents have been registered. Keep the streak alive.</div> : history.map((incident, index) => (
+            <article className="incident-row" key={incident.id}>
+              <div className="timeline"><span className="incident-mark">!</span>{index < history.length - 1 && <i />}</div>
+              <div className="incident-main"><div className="incident-meta"><time>{formatDate(incident.createdAt)}</time><span className="separator">/</span><span>reported by <b>{incident.username}</b></span></div><p>{incident.reason || "No reason provided"}</p></div>
+              <span className="incident-id">#{String(incident.id).padStart(3, "0")}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <footer className="footer"><span>COUNTER STATE: DERIVED LIVE</span><span>UTC · DATA PERSISTED IN TURSO</span></footer>
     </main>
   );
 }

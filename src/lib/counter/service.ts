@@ -83,6 +83,15 @@ export async function getLastIncident(): Promise<Incident | null> {
   return recent ?? null;
 }
 
+export async function getIncidentHistory(limit = 20): Promise<Incident[]> {
+  const db = getDb();
+  return db
+    .select()
+    .from(incidents)
+    .orderBy(desc(incidents.createdAt))
+    .limit(limit);
+}
+
 export interface Stats {
   streak: Streak;
   totalIncidents: number;
