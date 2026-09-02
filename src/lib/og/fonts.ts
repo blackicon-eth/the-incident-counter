@@ -8,7 +8,7 @@ interface LoadedFont {
 }
 
 const FONTS_CSS_URL =
-  "https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500&display=swap";
+  "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap";
 
 // Google Fonts serves TTF to user agents without WOFF/WOFF2 support. satori
 // (next/og) only parses TTF/OTF, so we request with a legacy Android UA.
