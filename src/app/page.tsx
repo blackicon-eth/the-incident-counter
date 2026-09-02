@@ -13,6 +13,8 @@ const timeFormatter = new Intl.DateTimeFormat("en-US", {
   minute: "2-digit",
 });
 
+const MILESTONES = [7, 14, 30, 100, 365, 1000, 3000, 5000, 10000];
+
 function formatDate(date: Date) {
   return `${dateFormatter.format(date)} · ${timeFormatter.format(date)}`;
 }
@@ -22,11 +24,23 @@ function streakColor(days: number) {
   return `hsl(${hue} 72% 68%)`;
 }
 
+function milestonePosition(days: number) {
+  if (days <= 0) return 0;
+  if (days >= MILESTONES[MILESTONES.length - 1]) return 100;
+
+  const nextIndex = MILESTONES.findIndex((milestone) => days < milestone);
+  const previous = nextIndex === 0 ? 0 : MILESTONES[nextIndex - 1];
+  const next = MILESTONES[nextIndex];
+  const segment = 100 / MILESTONES.length;
+  const progress = (days - previous) / (next - previous);
+  return (nextIndex + progress) * segment;
+}
+
 export default async function Home() {
   const [{ streak, totalIncidents, mostRecentIncident }, history] =
     await Promise.all([getStats(), getIncidentHistory()]);
   const days = streak.days;
-  const progress = Math.min(100, days);
+  const progress = milestonePosition(days);
   const accent = streakColor(days);
 
   return (
@@ -46,10 +60,22 @@ export default async function Home() {
           <div className="panel-label"><span className="pulse-dot" /> CURRENT STREAK</div>
           <div className="streak-number" style={{ color: accent }}>{days}</div>
           <div className="streak-unit">DAYS WITHOUT INCIDENTS</div>
-          <div className="streak-track" aria-label={`${progress} days toward 100 day milestone`}>
-            <span style={{ width: `${Math.max(progress, 2)}%`, background: accent }} />
+          <div className="milestone-track" aria-label={`${days} days across a 10,000 day milestone track`}>
+            <div className="streak-track"><span style={{ width: `${Math.max(progress, 1.5)}%`, background: accent }} /></div>
+            <div className="milestone-markers">
+              {MILESTONES.map((milestone, index) => (
+                <span
+                  className={`milestone-marker${days >= milestone ? " reached" : ""}`}
+                  key={milestone}
+                  style={{ left: `${(index + 1) * (100 / MILESTONES.length)}%` }}
+                >
+                  <i />
+                  <b>{milestone >= 1000 ? `${milestone / 1000}k` : milestone}</b>
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="track-meta"><span>0</span><span>100 day milestone</span></div>
+          <div className="track-meta"><span>0 days</span><span>10,000 day horizon</span></div>
         </article>
 
         <div className="metric-stack">
