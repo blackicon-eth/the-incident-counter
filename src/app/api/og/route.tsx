@@ -13,6 +13,38 @@ const colors = {
   primary: "#9ce39e",
 };
 
+function clamp01(n: number): number {
+  return Math.max(0, Math.min(1, n));
+}
+
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+// HSL (h 0-360, s/l 0-100) -> hex string.
+function hslToHex(h: number, s: number, l: number): string {
+  const sn = s / 100;
+  const ln = l / 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = sn * Math.min(ln, 1 - ln);
+  const f = (n: number) =>
+    ln - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+  const to = (n: number) =>
+    Math.round(255 * f(n))
+      .toString(16)
+      .padStart(2, "0");
+  return `#${to(0)}${to(8)}${to(4)}`;
+}
+
+// Red at 0 days, green at 100+ days.
+function daysToColor(days: number): string {
+  const t = clamp01(days / 100);
+  const h = lerp(0, 122, t);
+  const s = lerp(73, 56, t);
+  const l = lerp(77, 75, t);
+  return hslToHex(h, s, l);
+}
+
 function formatHumanDate(iso?: string): string | undefined {
   if (!iso) {
     return undefined;
@@ -35,6 +67,9 @@ interface OgProps {
 }
 
 function OgCard({ days, lastIncidentDate }: OgProps) {
+  const daysNum = Number.parseInt(days, 10) || 0;
+  const numberColor = daysToColor(daysNum);
+
   return (
     <div
       style={{
@@ -78,9 +113,9 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
             fontSize: "210px",
             lineHeight: 1,
             fontWeight: 700,
-            color: colors.primary,
+            color: numberColor,
             letterSpacing: "-0.02em",
-            fontFamily: "Hanken Grotesk",
+            fontFamily: "Space Grotesk",
             marginTop: "64px",
             marginBottom: "64px",
           }}
@@ -90,7 +125,7 @@ function OgCard({ days, lastIncidentDate }: OgProps) {
 
         <div
           style={{
-            fontFamily: "Hanken Grotesk",
+            fontFamily: "Space Grotesk",
             fontSize: "36px",
             fontWeight: 400,
             color: colors.onSurfaceVariant,
