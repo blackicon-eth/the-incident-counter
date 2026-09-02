@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getIncidentHistory, getStats } from "@/lib/counter/service";
 
 export const dynamic = "force-dynamic";
@@ -33,17 +32,12 @@ export default async function Home() {
   return (
     <main className="dashboard-shell">
       <div className="ambient-glow" aria-hidden="true" />
-      <header className="topbar">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden="true"><span /></span>
-          <span>Incident Counter</span>
-        </Link>
-        <div className="status-pill"><span /> LIVE MONITORING</div>
-      </header>
-
       <section className="intro reveal">
         <p className="eyebrow">DISCORD / SAFETY SIGNAL</p>
-        <h1>Clear skies,<br /><em>so far.</em></h1>
+        <div className="headline-row">
+          <h1>Clear skies,<br /><em>so far.</em></h1>
+          <div className="status-pill"><span /> LIVE MONITORING</div>
+        </div>
         <p className="intro-copy">A live record of the server&apos;s calm. Every incident resets the clock. Every quiet day is earned.</p>
       </section>
 
