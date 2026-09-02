@@ -150,7 +150,7 @@ function OgCard({ days, lastIncidentDate, reason }: OgProps) {
               textAlign: "center",
             }}
           >
-            Reason: {reason}
+            {`Reason: ${reason}`}
           </div>
         )}
       </div>
