@@ -1,12 +1,13 @@
 import { config } from "dotenv";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v10";
+import { fileURLToPath } from "node:url";
 import { COMMANDS } from "../lib/discord/commands";
 
 config({ path: ".env.local" });
 config({ path: ".env" });
 
-async function main() {
+export async function registerCommands(): Promise<void> {
   const applicationId = process.env.DISCORD_APPLICATION_ID;
   const botToken = process.env.DISCORD_BOT_TOKEN;
 
@@ -27,9 +28,11 @@ async function main() {
   );
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  registerCommands()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+}

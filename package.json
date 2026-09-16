@@ -1,8 +1,10 @@
 {
   "name": "incidents-counter",
   "version": "1.0.0",
-  "private": true,
   "description": "Days Without Discord Incidents counter bot and web service",
+  "bin": {
+    "incidents-counter": "src/scripts/setup.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,7 +15,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx src/scripts/seed.ts",
-    "register": "tsx src/scripts/register-commands.ts"
+    "register": "tsx src/scripts/register-commands.ts",
+    "setup": "tsx src/scripts/setup.ts setup",
+    "doctor": "tsx src/scripts/setup.ts doctor"
   },
   "dependencies": {
     "@discordjs/rest": "^2.6.3",
@@ -24,6 +28,7 @@
     "next": "^15.5.25",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "tsx": "^4.23.13",
     "tweetnacl": "^1.0.3",
     "zod": "^4.5.4"
   },
@@ -36,7 +41,6 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.25",
     "tailwindcss": "^4.3.3",
-    "tsx": "^4.23.13",
     "typescript": "5.9"
   },
   "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"

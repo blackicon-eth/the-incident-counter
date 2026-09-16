@@ -101,33 +101,72 @@ turso db tokens create incidents-counter
 Put the returned URL and token in `.env` as `TURSO_DATABASE_URL` and
 `TURSO_AUTH_TOKEN`.
 
-### 4. Apply the schema
+### 4. Run the setup command
+
+After `.env` is configured, run:
+
+```bash
+npm run setup
+```
+
+The command runs the complete first-time setup:
+
+1. Validates all required environment variables.
+2. Tests the Turso connection.
+3. Verifies the Discord bot token and configured channel.
+4. Applies pending database migrations.
+5. Initializes the counter only if it does not already exist.
+6. Registers the global Discord slash commands.
+
+The setup command is safe to rerun. It does not overwrite an existing
+`counter_state` row.
+
+If you are running the CLI directly from the repository, this is equivalent:
+
+```bash
+npx tsx src/scripts/setup.ts setup
+```
+
+Once the package is published, the same flow can be run with:
+
+```bash
+npx incidents-counter setup
+```
+
+Until then, the package can be executed directly from GitHub:
+
+```bash
+npx --yes github:blackicon-eth/the-incident-counter setup
+```
+
+### 5. Initialize the database manually
+
+The individual database commands are available when you need more control:
 
 ```bash
 npm run db:migrate
 npm run db:seed
 ```
 
-The seed command initializes the counter state to the current time by default.
-To start with a historical date instead:
+`db:seed` initializes the counter state to the current time by default and does
+nothing if the counter has already been initialized. To start with a historical
+date instead:
 
 ```bash
 SEED_LAST_INCIDENT_AT=2026-08-01T00:00:00Z npm run db:seed
 ```
 
-Do not rerun the seed command against a live database unless you intentionally
-want to change the current counter start time.
-
-### 5. Register Discord commands
+### 6. Register Discord commands manually
 
 ```bash
 npm run register
 ```
 
 This registers `/incident`, `/days`, and `/stats` as global application
-commands. Discord can take up to an hour to propagate global commands.
+commands. Discord can take up to an hour to propagate global commands. The
+setup command performs this step automatically.
 
-### 6. Start the development server
+### 7. Start the development server
 
 ```bash
 npm run dev
@@ -253,8 +292,23 @@ Generates a 1200x630 PNG image. Example:
 | `npm run db:generate` | Generate a Drizzle migration from schema changes. |
 | `npm run db:migrate` | Apply migrations to Turso. |
 | `npm run db:push` | Push the schema directly to Turso. Use carefully. |
-| `npm run db:seed` | Initialize or update the counter state. |
+| `npm run db:seed` | Initialize the counter state if it does not exist. |
 | `npm run register` | Register the Discord slash commands. |
+| `npm run setup` | Run the complete safe first-time setup. |
+| `npm run doctor` | Validate environment, Turso, Discord, and channel access without changing the database or commands. |
+
+The CLI also exposes these subcommands:
+
+```bash
+npx tsx src/scripts/setup.ts doctor
+npx tsx src/scripts/setup.ts db:migrate
+npx tsx src/scripts/setup.ts db:seed
+npx tsx src/scripts/setup.ts discord:check
+npx tsx src/scripts/setup.ts discord:register
+```
+
+Use `doctor` first when setup fails. It does not modify the database or
+register commands.
 
 Before opening a pull request, run:
 
@@ -300,7 +354,8 @@ git diff --check
   configured database per deployment.
 - The public dashboard exposes recent incident usernames and reasons. Review
   that policy before making the dashboard public.
-- Database migrations and command registration are manual deployment steps.
+- Database migrations and command registration can be run through the setup CLI
+  or as separate commands when needed.
 - The project does not currently include an automated test suite or CI workflow.
 
 ## License
