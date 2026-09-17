@@ -8,6 +8,8 @@ stores every incident in Turso, derives the current streak from the latest
 incident timestamp, exposes a dashboard, generates shareable OG images, and
 posts a daily counter image through Vercel Cron.
 
+![Default incident counter preview](public/og-preview.webp)
+
 ## What It Does
 
 - Records incidents with an optional reason.
